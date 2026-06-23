@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
         LevelData nivel = niveis[nivelAtual];
         if (letrasDigitadas.Count < nivel.TamanhoDaResposta)
         {
-            uiManager.MostrarFeedback("Preencha todas as letras! 🤔", false);
+            uiManager.MostrarFeedback("Preencha todas as letras!", false);
             return;
         }
 
@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
             PlaySom(somErro); // 🔊 Som de erro
             uiManager.AnimarSlotsErrados();
             uiManager.AtualizarEstrelas(estrelas);
-            uiManager.MostrarFeedback("Não foi dessa vez! Tenta de novo! 😅", false);
+            uiManager.MostrarFeedback("Não foi dessa vez! Tenta de novo!", false);
             StartCoroutine(DelayLimpar());
         }
     }

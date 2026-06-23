@@ -15,6 +15,6 @@ MonoBehaviour:
   pergunta: "\xC9 conhecida como a \u201Cerva dos namorados\u201D e vem acompanhado
     de uma quadra popular."
   resposta: MANJERICO
-  dica: "\U0001F4A1 Dica opcional aqui"
+  dica: 
   numeroDoNivel: 15
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

@@ -15,6 +15,6 @@ MonoBehaviour:
   pergunta: "Ramos de (\u2026), s\xE3o usados pelas mulheres para p\xF4r na cara
     dos homens que passam."
   resposta: CIDREIRA
-  dica: "\U0001F4A1 Dica opcional aqui"
+  dica: 
   numeroDoNivel: 14
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

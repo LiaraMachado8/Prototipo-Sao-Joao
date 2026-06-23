@@ -21,12 +21,14 @@ public class UIManager : MonoBehaviour
 
     [Header("Feedback e Estrelas")]
     public TextMeshProUGUI textoFeedback;
-    public Image[] imagensEstrelas;
+    public Image[] imagensEstrelas;         // as 3 imagens de estrela
+    public Sprite spriteEstrelaPreenchida;  // ★ sprite da estrela cheia
+    public Sprite spriteEstrelaVazia;       // ☆ sprite da estrela vazia
 
     [Header("Painéis")]
     public GameObject painelVitoria;
-    public TextMeshProUGUI textoVitoriaEstrelas;
     public TextMeshProUGUI textoVitoriaNivel;
+    public TextMeshProUGUI textoVitoriaPalavra; // "A palavra era: QUADRILHA"
     public Button botaoProximoNivel;
     public Button botaoReiniciar;
     public GameObject painelFimDeJogo;
@@ -76,11 +78,6 @@ public class UIManager : MonoBehaviour
         if (painelFimDeJogo) painelFimDeJogo.SetActive(false);
     }
 
-    /// <summary>
-    /// Atualiza o estado visual de cada botão de letra.
-    /// naResposta  = quantas vezes cada letra aparece na resposta correta
-    /// jaUsadas    = quantas vezes cada letra já foi digitada pelo jogador
-    /// </summary>
     public void AtualizarAlfabeto(
         Dictionary<string, int> naResposta,
         Dictionary<string, int> jaUsadas)
@@ -91,7 +88,6 @@ public class UIManager : MonoBehaviour
 
             if (naResposta.ContainsKey(letra))
             {
-                // Letra está na resposta: calcula usos restantes
                 int usados = jaUsadas.ContainsKey(letra) ? jaUsadas[letra] : 0;
                 int restantes = naResposta[letra] - usados;
                 int total = naResposta[letra];
@@ -104,7 +100,6 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                // Letra não está na resposta: desativa após usar uma vez
                 bool usada = jaUsadas.ContainsKey(letra) && jaUsadas[letra] > 0;
                 btn.AtualizarEstadoComContador(desativado: usada, mostrarContador: false, contadorValor: 0);
             }
@@ -136,12 +131,24 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// Atualiza as estrelas usando sprites (preenchida/vazia) + cor de tint
     public void AtualizarEstrelas(int quantidade)
     {
         if (imagensEstrelas == null) return;
+
         for (int i = 0; i < imagensEstrelas.Length; i++)
-            if (imagensEstrelas[i])
-                imagensEstrelas[i].color = i < quantidade ? corEstrelaAtiva : corEstrelaInativa;
+        {
+            if (!imagensEstrelas[i]) continue;
+
+            bool ativa = i < quantidade;
+
+            // Troca o sprite se os campos estiverem preenchidos no Inspector
+            if (spriteEstrelaPreenchida != null && spriteEstrelaVazia != null)
+                imagensEstrelas[i].sprite = ativa ? spriteEstrelaPreenchida : spriteEstrelaVazia;
+
+            // Mantém o tint de cor como antes (funciona mesmo sem sprites customizados)
+            imagensEstrelas[i].color = ativa ? corEstrelaAtiva : corEstrelaInativa;
+        }
     }
 
     // ─── Feedback ──────────────────────────────────────────────────────────────
@@ -184,22 +191,25 @@ public class UIManager : MonoBehaviour
 
     // ─── Painéis ───────────────────────────────────────────────────────────────
 
-    public void MostrarPainelVitoria(int nivelAtual, int totalNiveis, int estrelas)
+    public void MostrarPainelVitoria(int nivelAtual, int totalNiveis, int qtdEstrelas)
     {
         if (!painelVitoria) return;
         painelVitoria.SetActive(true);
+
         bool ultimoNivel = nivelAtual >= totalNiveis;
 
-        if (textoVitoriaEstrelas)
-        {
-            string s = "";
-            for (int i = 0; i < 3; i++) s += i < estrelas ? "⭐" : "☆";
-            textoVitoriaEstrelas.text = s;
-        }
+        // Atualiza as estrelas com sprites
+        AtualizarEstrelas(qtdEstrelas);
+
+        // Texto do nível
         if (textoVitoriaNivel)
             textoVitoriaNivel.text = ultimoNivel
                 ? "Você completou todos os níveis! 🏆"
                 : $"Nível {nivelAtual} concluído!";
+
+        // Texto com a palavra certa
+        if (textoVitoriaPalavra)
+            textoVitoriaPalavra.text = $"A palavra era: {GameManager.Instance.NivelAtual.resposta}";
 
         if (botaoProximoNivel) botaoProximoNivel.gameObject.SetActive(!ultimoNivel);
         if (botaoReiniciar) botaoReiniciar.gameObject.SetActive(ultimoNivel);

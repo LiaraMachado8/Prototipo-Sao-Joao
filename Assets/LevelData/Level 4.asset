@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pergunta: Bairro do Porto com um dos mais frequentados arraiais populares.
   resposta: MIRAGAIA
-  dica: "\U0001F4A1 Dica opcional aqui"
+  dica: "Munic\xEDpio do Porto que foi sede da extinta Freguesia de Miragaia."
   numeroDoNivel: 5
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

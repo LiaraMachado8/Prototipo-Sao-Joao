@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level 20
   m_EditorClassIdentifier: 
   pergunta: "H\xE1 quem as sinta por estar longe das festas do S\xE3o Jo\xE3o."
-  resposta: PORTO
-  dica: "\U0001F4A1 Dica opcional aqui"
+  resposta: SAUDADES
+  dica: Um sentimento de falta
   numeroDoNivel: 21
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

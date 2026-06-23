@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fdb6916cc9313443924a3b641c25eb5, type: 3}
   m_Name: Level 19
   m_EditorClassIdentifier: 
-  pergunta: "\rBairro do Porto com um dos mais frequentados arraiais populares."
-  resposta: PORTO
-  dica: "\U0001F4A1 Dica opcional aqui"
+  pergunta: "\rUm bairro do Porto com um dos mais frequentados arraiais populares."
+  resposta: MASSARELOS
+  dica: 
   numeroDoNivel: 20
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

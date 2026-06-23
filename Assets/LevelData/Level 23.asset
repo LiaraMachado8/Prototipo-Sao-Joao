@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fdb6916cc9313443924a3b641c25eb5, type: 3}
-  m_Name: Level 22
+  m_Name: Level 23
   m_EditorClassIdentifier: 
-  pergunta: "Fazem parte das supersti\xE7\xF5es de S\xE3o Jo\xE3o,"
-  resposta: ORVALHADAS
-  dica: "Diz a tradi\xE7\xE3o que se apanhasdas, as mo\xE7as tronam-se mais belas"
-  numeroDoNivel: 23
+  pergunta: Uma Festa Muito bem animada
+  resposta: FOLIA
+  dica: 
+  numeroDoNivel: 24
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

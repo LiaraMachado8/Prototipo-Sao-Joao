@@ -15,6 +15,6 @@ MonoBehaviour:
   pergunta: "Serra do (\u2026), colina escarpada sobre o Rio Douro, em Vila Nova
     de Gaia, que tem vista privilegiada sobre o Porto."
   resposta: PILAR
-  dica: "\U0001F4A1 Dica opcional aqui"
+  dica: 
   numeroDoNivel: 4
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
