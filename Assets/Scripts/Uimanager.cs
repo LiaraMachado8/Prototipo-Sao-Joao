@@ -12,16 +12,16 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI textoNivel;
 
     [Header("Grade de Letras")]
-    public Transform containerAlfabeto;    // GridLayoutGroup aqui
-    public GameObject prefabLetraBotao;    // Prefab do LetterButton
+    public Transform containerAlfabeto;
+    public GameObject prefabLetraBotao;
 
     [Header("Slots de Resposta")]
-    public Transform containerSlots;       // HorizontalLayoutGroup aqui
-    public GameObject prefabSlot;          // Prefab do AnswerSlot
+    public Transform containerSlots;
+    public GameObject prefabSlot;
 
     [Header("Feedback e Estrelas")]
     public TextMeshProUGUI textoFeedback;
-    public Image[] imagensEstrelas;        // 3 imagens de estrela
+    public Image[] imagensEstrelas;
 
     [Header("Painéis")]
     public GameObject painelVitoria;
@@ -29,7 +29,6 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI textoVitoriaNivel;
     public Button botaoProximoNivel;
     public Button botaoReiniciar;
-
     public GameObject painelFimDeJogo;
 
     [Header("Cores")]
@@ -40,32 +39,24 @@ public class UIManager : MonoBehaviour
     public Color corEstrelaAtiva = new Color(1f, 0.85f, 0f);
     public Color corEstrelaInativa = new Color(0.4f, 0.4f, 0.4f);
 
-    // Listas de objetos instanciados
     private List<LetterButton> botoesLetras = new List<LetterButton>();
     private List<AnswerSlot> slotsResposta = new List<AnswerSlot>();
-
-    // ─── Inicialização ─────────────────────────────────────────────────────────
 
     void Start()
     {
         ConstruirAlfabeto();
-
         if (painelVitoria) painelVitoria.SetActive(false);
         if (painelFimDeJogo) painelFimDeJogo.SetActive(false);
-
-        // Conectar botões dos painéis
         if (botaoProximoNivel) botaoProximoNivel.onClick.AddListener(GameManager.Instance.ProximoNivel);
         if (botaoReiniciar) botaoReiniciar.onClick.AddListener(GameManager.Instance.ReiniciarJogo);
     }
 
     private void ConstruirAlfabeto()
     {
-        // Limpa o que tiver
         foreach (Transform filho in containerAlfabeto) Destroy(filho.gameObject);
         botoesLetras.Clear();
 
-        string alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        foreach (char c in alfabeto)
+        foreach (char c in "ABCDEFGHIJLMNOPQRSTUVZ")
         {
             GameObject obj = Instantiate(prefabLetraBotao, containerAlfabeto);
             LetterButton btn = obj.GetComponent<LetterButton>();
@@ -81,20 +72,47 @@ public class UIManager : MonoBehaviour
         if (textoPergunta) textoPergunta.text = nivel.pergunta;
         if (textoDica) textoDica.text = nivel.dica;
         if (textoNivel) textoNivel.text = $"NÍVEL {numero} DE {total}";
-
         if (painelVitoria) painelVitoria.SetActive(false);
         if (painelFimDeJogo) painelFimDeJogo.SetActive(false);
     }
 
-    public void AtualizarAlfabeto(HashSet<string> letrasUsadas)
+    /// <summary>
+    /// Atualiza o estado visual de cada botão de letra.
+    /// naResposta  = quantas vezes cada letra aparece na resposta correta
+    /// jaUsadas    = quantas vezes cada letra já foi digitada pelo jogador
+    /// </summary>
+    public void AtualizarAlfabeto(
+        Dictionary<string, int> naResposta,
+        Dictionary<string, int> jaUsadas)
     {
         foreach (var btn in botoesLetras)
-            btn.AtualizarEstado(letrasUsadas.Contains(btn.Letra));
+        {
+            string letra = btn.Letra;
+
+            if (naResposta.ContainsKey(letra))
+            {
+                // Letra está na resposta: calcula usos restantes
+                int usados = jaUsadas.ContainsKey(letra) ? jaUsadas[letra] : 0;
+                int restantes = naResposta[letra] - usados;
+                int total = naResposta[letra];
+
+                btn.AtualizarEstadoComContador(
+                    desativado: restantes <= 0,
+                    mostrarContador: total >= 2,
+                    contadorValor: restantes
+                );
+            }
+            else
+            {
+                // Letra não está na resposta: desativa após usar uma vez
+                bool usada = jaUsadas.ContainsKey(letra) && jaUsadas[letra] > 0;
+                btn.AtualizarEstadoComContador(desativado: usada, mostrarContador: false, contadorValor: 0);
+            }
+        }
     }
 
     public void AtualizarSlots(List<string> letrasDigitadas, int tamanho)
     {
-        // Recria os slots se o tamanho mudou
         if (slotsResposta.Count != tamanho) CriarSlots(tamanho);
 
         for (int i = 0; i < slotsResposta.Count; i++)
@@ -110,7 +128,6 @@ public class UIManager : MonoBehaviour
     {
         foreach (Transform filho in containerSlots) Destroy(filho.gameObject);
         slotsResposta.Clear();
-
         for (int i = 0; i < quantidade; i++)
         {
             GameObject obj = Instantiate(prefabSlot, containerSlots);
@@ -141,25 +158,18 @@ public class UIManager : MonoBehaviour
         if (textoFeedback) textoFeedback.text = "";
     }
 
-    // ─── Animações de Slots ────────────────────────────────────────────────────
-
     public void AnimarSlotsCorretos()
     {
-        foreach (var slot in slotsResposta)
-            slot.AtualizarCor(corSlotCorreto);
+        foreach (var slot in slotsResposta) slot.AtualizarCor(corSlotCorreto);
         MostrarFeedback("Correto! Muito bem! 🎉", true);
     }
 
-    public void AnimarSlotsErrados()
-    {
-        StartCoroutine(AnimacaoErro());
-    }
+    public void AnimarSlotsErrados() => StartCoroutine(AnimacaoErro());
 
     private IEnumerator AnimacaoErro()
     {
         foreach (var slot in slotsResposta) slot.AtualizarCor(corSlotErrado);
         yield return new WaitForSeconds(0.3f);
-        // Shake simples: move o container para direita e esquerda
         if (containerSlots)
         {
             Vector3 pos = containerSlots.localPosition;
@@ -178,7 +188,6 @@ public class UIManager : MonoBehaviour
     {
         if (!painelVitoria) return;
         painelVitoria.SetActive(true);
-
         bool ultimoNivel = nivelAtual >= totalNiveis;
 
         if (textoVitoriaEstrelas)
@@ -187,7 +196,6 @@ public class UIManager : MonoBehaviour
             for (int i = 0; i < 3; i++) s += i < estrelas ? "⭐" : "☆";
             textoVitoriaEstrelas.text = s;
         }
-
         if (textoVitoriaNivel)
             textoVitoriaNivel.text = ultimoNivel
                 ? "Você completou todos os níveis! 🏆"
