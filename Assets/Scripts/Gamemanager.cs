@@ -12,9 +12,17 @@ public class GameManager : MonoBehaviour
     [Header("Referências de UI")]
     public UIManager uiManager;
 
+    // ── Nomes dos sons (devem bater com o groupID na SoundLibrary) ──────────
+    [Header("Sound Effect IDs")]
+    public string somLetraClicada = "letra_clicada";   // clique numa letra
+    public string somLetraRemovida = "letra_removida";  // clique num slot para remover
+    public string somApagar = "apagar";          // botão Apagar (limpar tudo)
+    public string somErro = "erro";            // resposta errada
+    public string somAcerto = "acerto";          // resposta certa
+    public string somProximoNivel = "proximo_nivel";   // ao avançar de nível
+
     private int nivelAtual = 0;
     private List<string> letrasDigitadas = new List<string>();
-    // Quantas vezes cada letra já foi usada nesta tentativa
     private Dictionary<string, int> contagemUsadas = new Dictionary<string, int>();
     private int erros = 0;
     private int estrelas = 3;
@@ -47,12 +55,16 @@ public class GameManager : MonoBehaviour
         uiManager.LimparFeedback();
     }
 
-    public void ProximoNivel() => CarregarNivel(nivelAtual + 1);
+    public void ProximoNivel()
+    {
+        PlaySom(somProximoNivel);
+        CarregarNivel(nivelAtual + 1);
+    }
+
     public void ReiniciarJogo() => CarregarNivel(0);
 
-    // ─── Helpers de contagem ───────────────────────────────────────────────────
+    // ─── Helpers ───────────────────────────────────────────────────────────────
 
-    /// Quantas vezes cada letra aparece na resposta correta
     public static Dictionary<string, int> ContarNaResposta(string resposta)
     {
         var map = new Dictionary<string, int>();
@@ -64,11 +76,10 @@ public class GameManager : MonoBehaviour
         return map;
     }
 
-    /// Quantos usos restam para a letra (null = letra não está na resposta)
     private int? UsosRestantes(string letra)
     {
         var naResposta = ContarNaResposta(niveis[nivelAtual].resposta);
-        if (!naResposta.ContainsKey(letra)) return null; // não está na resposta
+        if (!naResposta.ContainsKey(letra)) return null;
         int jaUsados = contagemUsadas.ContainsKey(letra) ? contagemUsadas[letra] : 0;
         return naResposta[letra] - jaUsados;
     }
@@ -80,21 +91,18 @@ public class GameManager : MonoBehaviour
         LevelData nivel = niveis[nivelAtual];
         if (letrasDigitadas.Count >= nivel.TamanhoDaResposta) return;
 
-        // Letras fora da resposta: só podem aparecer uma vez (comportamento original)
-        // Letras na resposta: limitadas pela quantidade de ocorrências
         int? restantes = UsosRestantes(letra);
         if (restantes == null)
         {
-            // Letra não está na resposta — permite usar mas só uma vez
             if (contagemUsadas.ContainsKey(letra) && contagemUsadas[letra] > 0) return;
         }
-        else if (restantes <= 0)
-        {
-            return; // esgotou os usos desta letra
-        }
+        else if (restantes <= 0) return;
 
         letrasDigitadas.Add(letra);
         contagemUsadas[letra] = (contagemUsadas.ContainsKey(letra) ? contagemUsadas[letra] : 0) + 1;
+
+        // 🔊 Som de letra clicada
+        PlaySom(somLetraClicada);
 
         uiManager.AtualizarSlots(letrasDigitadas, nivel.TamanhoDaResposta);
         uiManager.AtualizarAlfabeto(ContarNaResposta(nivel.resposta), contagemUsadas);
@@ -106,9 +114,11 @@ public class GameManager : MonoBehaviour
 
         string letra = letrasDigitadas[indice];
         letrasDigitadas.RemoveAt(indice);
-
         if (contagemUsadas.ContainsKey(letra))
             contagemUsadas[letra] = Mathf.Max(0, contagemUsadas[letra] - 1);
+
+        // 🔊 Som de letra removida
+        PlaySom(somLetraRemovida);
 
         uiManager.AtualizarSlots(letrasDigitadas, niveis[nivelAtual].TamanhoDaResposta);
         uiManager.AtualizarAlfabeto(ContarNaResposta(niveis[nivelAtual].resposta), contagemUsadas);
@@ -116,6 +126,9 @@ public class GameManager : MonoBehaviour
 
     public void LimparTudo()
     {
+        if (letrasDigitadas.Count > 0)
+            PlaySom(somApagar); // 🔊 Som de apagar (só toca se tinha algo)
+
         letrasDigitadas.Clear();
         contagemUsadas.Clear();
         uiManager.AtualizarSlots(letrasDigitadas, niveis[nivelAtual].TamanhoDaResposta);
@@ -128,32 +141,34 @@ public class GameManager : MonoBehaviour
         LevelData nivel = niveis[nivelAtual];
         if (letrasDigitadas.Count < nivel.TamanhoDaResposta)
         {
-            uiManager.MostrarFeedback("Preencha todas as letras!", false);
+            uiManager.MostrarFeedback("Preencha todas as letras! 🤔", false);
             return;
         }
 
         string tentativa = string.Join("", letrasDigitadas);
         if (nivel.ValidarResposta(tentativa))
         {
+            PlaySom(somAcerto); // 🔊 Som de acerto
             uiManager.AnimarSlotsCorretos();
-            SoundManager.Instance.PlaySound2D("Winnning11");
             StartCoroutine(DelayMostrarVitoria());
         }
         else
         {
             erros++;
             estrelas = Mathf.Max(0, 3 - erros);
+            PlaySom(somErro); // 🔊 Som de erro
             uiManager.AnimarSlotsErrados();
             uiManager.AtualizarEstrelas(estrelas);
-            uiManager.MostrarFeedback("Não foi dessa vez! Tenta de novo!", false);
+            uiManager.MostrarFeedback("Não foi dessa vez! Tenta de novo! 😅", false);
             StartCoroutine(DelayLimpar());
         }
     }
 
+    // ─── Coroutines ────────────────────────────────────────────────────────────
+
     private IEnumerator DelayMostrarVitoria()
     {
-        yield return new WaitForSeconds(5f);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(0.6f);
         uiManager.MostrarPainelVitoria(nivelAtual + 1, niveis.Length, estrelas);
     }
 
@@ -164,6 +179,16 @@ public class GameManager : MonoBehaviour
     }
 
     private void FinalizarJogo() => uiManager.MostrarPainelFimDeJogo();
+
+    // ─── Utilitário de som ─────────────────────────────────────────────────────
+
+    private void PlaySom(string id)
+    {
+        if (SoundManager.Instance != null && !string.IsNullOrEmpty(id))
+            SoundManager.Instance.PlaySound2D(id);
+    }
+
+    // ─── Getters ───────────────────────────────────────────────────────────────
 
     public LevelData NivelAtual => niveis[nivelAtual];
     public int NumeroNivelAtual => nivelAtual + 1;

@@ -226,3 +226,6 @@ MonoBehaviour:
   - groupID: Winnning11
     clip:
     - {fileID: 8300000, guid: 6a69e6492972dc74fbd62d087e89d0da, type: 3}
+  - groupID: letra_clicada
+    clip:
+    - {fileID: 8300000, guid: c5ca4bd69ee81044c812ad88b2f42a60, type: 3}
