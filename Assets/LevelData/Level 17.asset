@@ -15,6 +15,6 @@ MonoBehaviour:
   pergunta: "(\u2026) de ar quente, na noite da festa, s\xE3o lan\xE7ados com luz
     e desejos para que estes cheguem ao c\xE9u."
   resposta: BALOES
-  dica: "S\xE3o muito utilizados em festas "
+  dica: 
   numeroDoNivel: 18
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -100,9 +100,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.11362791, g: 1, b: 0, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -138,11 +138,11 @@ MonoBehaviour:
   textoLetra: {fileID: 5262950213365485175}
   textoContador: {fileID: 1890171307193182277}
   imagemFundo: {fileID: 7305251074391204115}
-  corAtiva: {r: 1, g: 0.938499, b: 0, a: 0.58431375}
-  corUsada: {r: 0, g: 0.030221462, b: 1, a: 0.05}
-  corTextoAtivo: {r: 1, g: 0.9622632, b: 0, a: 1}
-  corTextoUsado: {r: 0.013630867, g: 0, b: 1, a: 0.25}
-  corContador: {r: 1, g: 0.85, b: 0, a: 1}
+  corAtiva: {r: 0, g: 0, b: 0, a: 0.8117647}
+  corUsada: {r: 0.06379778, g: 0.5622641, b: 0.058348097, a: 0.8862745}
+  corTextoAtivo: {r: 0, g: 0, b: 0, a: 1}
+  corTextoUsado: {r: 0.23709524, g: 0.6301887, b: 0.21283726, a: 0.7921569}
+  corContador: {r: 0.7433963, g: 0.72939193, b: 0.6494197, a: 0}
 --- !u!1 &7022614588277105492
 GameObject:
   m_ObjectHideFlags: 0

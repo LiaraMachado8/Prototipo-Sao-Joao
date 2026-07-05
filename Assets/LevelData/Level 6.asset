@@ -15,6 +15,6 @@ MonoBehaviour:
   pergunta: "S\xE3o o prato principal do S\xE3o Jo\xE3o, s\xE3o acompanhadas com
     pimentos assados, broa e vinho."
   resposta: SARDINHAS
-  dica: "No dia 24, a tradi\xE7\xE3o manda comer cabrito assado."
+  dica: 
   numeroDoNivel: 7
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

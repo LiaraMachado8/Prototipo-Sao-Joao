@@ -15,6 +15,6 @@ MonoBehaviour:
   pergunta: "(\u2026) de pl\xE1stico, foram introduzidos na festa a partir dos anos
     70, cumprindo a mesma fun\xE7\xE3o dos alhos-porros."
   resposta: MARTELOS
-  dica: "S\xE3o feitos de pl\xE1stico"
+  dica: 
   numeroDoNivel: 13
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}

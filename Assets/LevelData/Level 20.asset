@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pergunta: "H\xE1 quem as sinta por estar longe das festas do S\xE3o Jo\xE3o."
   resposta: SAUDADES
-  dica: Um sentimento de falta
+  dica: Um sentimento que nos lembra do passado
   numeroDoNivel: 21
   imagemDecoratica: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
